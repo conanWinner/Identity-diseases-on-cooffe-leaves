@@ -1,9 +1,13 @@
 package com.identify.leavescoffee.service;
 
+import com.identify.leavescoffee.dto.request.ApiResponse;
 import com.identify.leavescoffee.dto.request.UserCreationRequest;
 import com.identify.leavescoffee.entity.User;
+import com.identify.leavescoffee.exception.AppException;
+import com.identify.leavescoffee.exception.ErrorCode;
 import com.identify.leavescoffee.repository.UserRepository;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
@@ -17,7 +21,7 @@ public class UserService {
 
     UserRepository userRepository;
 
-    public User createRequest(UserCreationRequest request){
+    public ApiResponse<User> createRequest(UserCreationRequest request){
 
         User user = User.builder()
                 .username(request.getUsername())
@@ -26,19 +30,33 @@ public class UserService {
                 .registeddate(request.getRegisteddate())
                 .build();
 
-        return userRepository.save(user);
+        if(userRepository.existsByUsername(request.getUsername())){
+
+            throw new AppException(ErrorCode.USER_EXISTS);
+
+        }
+
+        return ApiResponse.<User>builder()
+                .code(ErrorCode.SUCCESS.getCode())
+                .message(ErrorCode.SUCCESS.getMessage())
+                .result(userRepository.save(user))
+                .build();
 
     }
 
-    public List<User> getAllUsers(){
+    public ApiResponse<List<User>> getAllUsers(){
 
-        return userRepository.findAll();
+        return ApiResponse.<List<User>>builder()
+                .code(ErrorCode.SUCCESS.getCode())
+                .message(ErrorCode.SUCCESS.getMessage())
+                .result(userRepository.findAll())
+                .build();
 
     }
 
     public User getUserById(String id){
 
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Not find user"));
+        return userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
     }
 

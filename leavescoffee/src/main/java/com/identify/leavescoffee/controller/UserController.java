@@ -1,8 +1,10 @@
 package com.identify.leavescoffee.controller;
 
+import com.identify.leavescoffee.dto.request.ApiResponse;
 import com.identify.leavescoffee.dto.request.UserCreationRequest;
 import com.identify.leavescoffee.entity.User;
 import com.identify.leavescoffee.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,14 +21,14 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    User createUser(@RequestBody UserCreationRequest request) {
+    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
 
         return userService.createRequest(request);
 
     }
 
     @GetMapping
-    List<User> getAllUsers() {
+    ApiResponse<List<User>> getAllUsers() {
 
         return userService.getAllUsers();
 
