@@ -13,13 +13,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreationRequest {
+public class UserUpdateRequest {
 
-    @Size(min = 3, message = "USERNAME_INVALID")
-    String username;
     @Size(min = 6, message = "PASSWORD_INVALID")
     String password;
     String phonenumber;
-    LocalDate registeddate;
 
 }
