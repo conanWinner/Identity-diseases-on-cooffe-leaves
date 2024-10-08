@@ -1,8 +1,9 @@
 package com.identify.leavescoffee.controller;
 
-import com.identify.leavescoffee.dto.request.ApiResponse;
+import com.identify.leavescoffee.dto.response.ApiResponse;
 import com.identify.leavescoffee.dto.request.UserCreationRequest;
-import com.identify.leavescoffee.entity.User;
+import com.identify.leavescoffee.dto.request.UserUpdateRequest;
+import com.identify.leavescoffee.dto.response.UserResponse;
 import com.identify.leavescoffee.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -21,28 +22,28 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
+    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
 
         return userService.createRequest(request);
 
     }
 
     @GetMapping
-    ApiResponse<List<User>> getAllUsers() {
+    ApiResponse<List<UserResponse>> getAllUsers() {
 
         return userService.getAllUsers();
 
     }
 
     @GetMapping("/{iduser}")
-    User getUserById(@PathVariable("iduser") String iduser) {
+    UserResponse getUserById(@PathVariable("iduser") String iduser) {
 
         return userService.getUserById(iduser);
 
     }
 
     @PutMapping("/{iduser}")
-    User updateUser(@PathVariable("iduser") String iduser, @RequestBody UserCreationRequest request){
+    UserResponse updateUser(@PathVariable("iduser") String iduser, @RequestBody UserUpdateRequest request){
 
         return userService.updateUserById(iduser, request);
 

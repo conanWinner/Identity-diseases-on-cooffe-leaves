@@ -1,15 +1,19 @@
 package com.identify.leavescoffee.service;
 
-import com.identify.leavescoffee.dto.request.ApiResponse;
+import com.identify.leavescoffee.dto.response.ApiResponse;
 import com.identify.leavescoffee.dto.request.UserCreationRequest;
+import com.identify.leavescoffee.dto.request.UserUpdateRequest;
+import com.identify.leavescoffee.dto.response.UserResponse;
 import com.identify.leavescoffee.entity.User;
 import com.identify.leavescoffee.exception.AppException;
 import com.identify.leavescoffee.exception.ErrorCode;
+import com.identify.leavescoffee.mapper.UserMapper;
 import com.identify.leavescoffee.repository.UserRepository;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +24,16 @@ import java.util.List;
 public class UserService {
 
     UserRepository userRepository;
+    UserMapper mapper;
 
-    public ApiResponse<User> createRequest(UserCreationRequest request){
+    public ApiResponse<UserResponse> createRequest(UserCreationRequest request){
+
+        //Bcrpyt
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         User user = User.builder()
                 .username(request.getUsername())
-                .password(request.getPhonenumber())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .phonenumber(request.getPhonenumber())
                 .registeddate(request.getRegisteddate())
                 .build();
@@ -36,40 +44,45 @@ public class UserService {
 
         }
 
-        return ApiResponse.<User>builder()
+        return ApiResponse.<UserResponse>builder()
                 .code(ErrorCode.SUCCESS.getCode())
                 .message(ErrorCode.SUCCESS.getMessage())
-                .result(userRepository.save(user))
+                .result(
+                        mapper.toUserResponse(userRepository.save(user))
+                )
                 .build();
 
     }
 
-    public ApiResponse<List<User>> getAllUsers(){
+    public ApiResponse<List<UserResponse>> getAllUsers(){
 
-        return ApiResponse.<List<User>>builder()
+        return ApiResponse.<List<UserResponse>>builder()
                 .code(ErrorCode.SUCCESS.getCode())
                 .message(ErrorCode.SUCCESS.getMessage())
-                .result(userRepository.findAll())
+                .result(
+                        mapper.toUserResponse(
+                                userRepository.findAll()
+                        )
+                )
                 .build();
 
     }
 
-    public User getUserById(String id){
+    public UserResponse getUserById(String id){
 
-        return userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return mapper.toUserResponse(userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
 
     }
 
-    public User updateUserById(String id, UserCreationRequest request){
+    public UserResponse updateUserById(String id, UserUpdateRequest request){
 
-        User user = getUserById(id);
+        User user = userRepository.findById(id)
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        user.setUsername(request.getUsername());
         user.setPassword(request.getPhonenumber());
         user.setPhonenumber(request.getPhonenumber());
-        user.setRegisteddate(request.getRegisteddate());
 
-        return userRepository.save(user);
+        return mapper.toUserResponse(userRepository.save(user));
 
     }
 

@@ -1,4 +1,4 @@
-package com.identify.leavescoffee.dto.request;
+package com.identify.leavescoffee.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

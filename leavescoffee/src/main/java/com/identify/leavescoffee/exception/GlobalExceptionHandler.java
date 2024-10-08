@@ -1,12 +1,10 @@
 package com.identify.leavescoffee.exception;
 
-import com.identify.leavescoffee.dto.request.ApiResponse;
+import com.identify.leavescoffee.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
