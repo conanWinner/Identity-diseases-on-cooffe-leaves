@@ -9,8 +9,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthenticationResponse {
+public class IntrospectResponse {
 
-    String token;
+    boolean valid;
 
 }

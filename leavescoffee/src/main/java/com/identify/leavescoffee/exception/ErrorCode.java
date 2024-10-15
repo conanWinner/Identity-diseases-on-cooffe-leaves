@@ -14,6 +14,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(3000, "User not found"),
     USERNAME_INVALID(4000, "Username is invalid"),
     PASSWORD_INVALID(5000, "Password is invalid"),
+    UNAUTHENTICATED(6000, "Unauthenticated"),
 
 
     UNCATEGORIZED_ERROR(9999, "Uncategorized error"),
