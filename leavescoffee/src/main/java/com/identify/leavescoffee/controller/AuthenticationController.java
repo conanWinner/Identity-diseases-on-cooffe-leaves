@@ -23,12 +23,12 @@ public class AuthenticationController {
 
     AuthenticationService auth;
 
-    @PostMapping("login")
+    @PostMapping("/login")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return auth.isAuthenticated(request);
     }
 
-    @PostMapping("introspect")
+    @PostMapping("/introspect")
     ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
         return auth.isIntrospect(request);
     }

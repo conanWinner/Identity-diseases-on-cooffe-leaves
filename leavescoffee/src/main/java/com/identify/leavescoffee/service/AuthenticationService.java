@@ -19,17 +19,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.identify.leavescoffee.Common.AppBcrypt;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +37,7 @@ import java.util.Date;
 public class AuthenticationService {
 
     UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -72,13 +72,13 @@ public class AuthenticationService {
          User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-         boolean result = AppBcrypt.passwordEncoder.matches(request.getPassword(), user.getPassword());
+         boolean result = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
          if(!result) {
              throw new AppException(ErrorCode.UNAUTHENTICATED);
          }
 
-         String token = genaerateToken(request.getUsername());
+         String token = generateToken(user);
 
          return ApiResponse.<AuthenticationResponse>builder()
                  .code(ErrorCode.SUCCESS.getCode())
@@ -91,12 +91,12 @@ public class AuthenticationService {
 
     }
 
-    private String genaerateToken(String username) {
+    private String generateToken(User user) {
 
         JWSHeader  header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet  claims = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuer("conanWinner.com")
                 .issueTime(new Date())
                 .expirationTime(
@@ -104,7 +104,7 @@ public class AuthenticationService {
                                 Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                         )
                 )
-                .claim("username", "conanWinner")
+                .claim("scope", buildScope(user))
                 .build();
 
 
@@ -118,6 +118,20 @@ public class AuthenticationService {
             log.info(e.getMessage());
             throw new RuntimeException(e);
         }
+
+    }
+
+    private String buildScope(User user){
+
+        StringJoiner stringJoiner = new StringJoiner(" ");
+
+        if (!user.getRoles().isEmpty()) {
+            user.getRoles().forEach(
+                    stringJoiner::add
+            );
+        }
+
+        return stringJoiner.toString();
 
     }
 

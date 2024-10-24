@@ -1,0 +1,14 @@
+### Lấy toàn bộ user => Không thành công
+GET http://localhost:8080/leavescoffee/users
+
+
+### Lấy toàn bộ user với signerKey => thành công
+GET http://localhost:8080/leavescoffee/users
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjb25hbldpbm5lci5jb20iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTcyOTc4MjQzMSwiaWF0IjoxNzI5Nzc4ODMxLCJzY29wZSI6IkFETUlOIn0.dVOErSLK7DRY_5ot7TPgcS5eDVTQR_5XkLNI5a9NguhmBu6rtXu9o5i6UMumVgyqGhhJlJKGMnTKgN9-lKaDqw
+
+<> 2024-10-16T151236.200.json
+<> 2024-10-16T150905.200.json
+###
+
+
+

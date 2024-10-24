@@ -5,6 +5,7 @@ import com.identify.leavescoffee.dto.request.UserCreationRequest;
 import com.identify.leavescoffee.dto.request.UserUpdateRequest;
 import com.identify.leavescoffee.dto.response.UserResponse;
 import com.identify.leavescoffee.entity.User;
+import com.identify.leavescoffee.enums.Role;
 import com.identify.leavescoffee.exception.AppException;
 import com.identify.leavescoffee.exception.ErrorCode;
 import com.identify.leavescoffee.mapper.UserMapper;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -25,17 +27,20 @@ public class UserService {
 
     UserRepository userRepository;
     UserMapper mapper;
+    PasswordEncoder passwordEncoder;
 
     public ApiResponse<UserResponse> createRequest(UserCreationRequest request){
 
-        //Bcrpyt
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        HashSet<String> addRole = new HashSet<>();
+
+        addRole.add(Role.USER.name());
 
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phonenumber(request.getPhonenumber())
                 .registeddate(request.getRegisteddate())
+                .roles(addRole)
                 .build();
 
         if(userRepository.existsByUsername(request.getUsername())){

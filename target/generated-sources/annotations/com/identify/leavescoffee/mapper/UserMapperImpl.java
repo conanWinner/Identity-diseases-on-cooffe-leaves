@@ -3,7 +3,9 @@ package com.identify.leavescoffee.mapper;
 import com.identify.leavescoffee.dto.response.UserResponse;
 import com.identify.leavescoffee.entity.User;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +26,12 @@ public class UserMapperImpl implements UserMapper {
 
         userResponse.id( user.getId() );
         userResponse.username( user.getUsername() );
-        userResponse.password( user.getPassword() );
         userResponse.phonenumber( user.getPhonenumber() );
         userResponse.registeddate( user.getRegisteddate() );
+        Set<String> set = user.getRoles();
+        if ( set != null ) {
+            userResponse.roles( new LinkedHashSet<String>( set ) );
+        }
 
         return userResponse.build();
     }

@@ -1,0 +1,36 @@
+### Đăng nhập => Tạo token
+POST http://localhost:8080/leavescoffee/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+###
+
+
+### Xác thực token
+POST http://localhost:8080/leavescoffee/auth/introspect
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjb25hbldpbm5lci5jb20iLCJzdWIiOiJjb25hbldpbm5lciIsImV4cCI6MTcyOTc3Nzg2NiwiaWF0IjoxNzI5Nzc0MjY2LCJ1c2VybmFtZSI6ImNvbmFuV2lubmVyIn0.vER3c7l-EjSmqbdk7YIQRitS2rtjO5RY_uyobYCgm9VXkP8fcSDmsyMR5hAQx-MeRwxk05CGarwWqvsIPyoq8g"
+}
+###
+
+
+### Đăng Ký tài khoản
+POST http://localhost:8080/leavescoffee/users
+Content-Type: application/json
+
+{
+  "username": "trau3",
+  "password": "333333",
+  "phonenumber": "111",
+  "registeddate": "",
+  "roles": "user"
+}
+###
+
+
+
