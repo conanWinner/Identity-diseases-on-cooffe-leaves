@@ -8,10 +8,10 @@ from PIL import Image
 app = Sanic(__name__)
 CORS(app)
 
-pathURL = "FileModel/model_2_1.pth"
+pathURL = "FileModel/model_1_1.pth"
 
 #load model
-model = torch.load(pathURL, map_location=torch.device('cpu'), weights_only=False)
+model = torch.load(pathURL, map_location=torch.device('cpu'))
 
 model.eval()
 
@@ -67,7 +67,7 @@ async def predict(request):
 
     return response.json({
         'class': predicted_class,
-        'confidence': float(confidence) if confidence is not None else None
+        'confidence': float(confidence)/10 if confidence is not None else None
     })
 
 
